@@ -6,21 +6,36 @@ import app.prompts.prompts as Prompts_Catalog
 from app.states.states import WorkflowState, NodeType
 
 from app.scrape.tavily import tavily_tool
+from app.core.config import *
 
+import requests
 from loguru import logger
 # import traceback
 # import ast
 
 output_parser = JsonOutputParser()
 
+# def products_scraper(lst, task):
+
+# 	final_lst = []
+# 	for sing in lst:
+# 		url = sing["url"]
+# 		sing_data = tavily_tool.invoke(task + '\n' + url)
+# 		final_lst.append(sing_data)
+
+# 	return final_lst
+
 def products_scraper(lst, task):
-
 	final_lst = []
-	for sing in lst:
-		url = sing["url"]
-		sing_data = tavily_tool.invoke(task + '\n' + url)
-		final_lst.append(sing_data)
+	headers = {
+		"Authorization": "Bearer " + str(JINA_API_KEY)
+	}
 
+	for sing in lst:
+		url = "https://r.jina.ai/" + sing["url"]
+		response_jina = requests.get(url, headers=headers)
+		final_lst.append(response_jina.content)
+	
 	return final_lst
 
 def tasks_definer_tool(state: WorkflowState) -> WorkflowState:
