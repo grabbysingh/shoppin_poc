@@ -21,3 +21,4 @@ Steps to run the application:
 3. pip install -r requirements.txt
 4. python main.py
 5. go to http://127.0.0.1:8001/docs
+6. python version - 3.12
